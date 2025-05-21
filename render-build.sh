@@ -1,9 +1,9 @@
-# Marked as executable
-
 #!/usr/bin/env bash
 
-# Install Python dependencies
+echo "📦 Installing Python dependencies..."
 pip install -r requirements.txt
 
-# Install Playwright browsers (no root access required)
+echo "🌐 Installing Playwright browsers..."
 python -m playwright install
+
+echo "✅ Build script completed."
