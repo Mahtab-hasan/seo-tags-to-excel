@@ -1,8 +1,9 @@
+import os
+os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "./browsers"
 from flask import Flask, render_template, request, send_file, after_this_request
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 import pandas as pd
-import os
 import uuid
 import logging
 
