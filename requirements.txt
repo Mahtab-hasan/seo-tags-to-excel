@@ -1,6 +1,6 @@
-flask>=3.0.3
-pandas>=2.2.2
-beautifulsoup4>=4.12.3
-playwright>=1.44.0
-openpyxl>=3.1.2
-gunicorn>=21.2.0
+playwright==1.52.0  # Match installed version from logs
+flask==3.1.1
+pandas==2.2.3
+beautifulsoup4==4.13.4
+openpyxl==3.1.5
+gunicorn==23.0.0
