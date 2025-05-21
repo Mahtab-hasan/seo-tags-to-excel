@@ -5,12 +5,12 @@ import pandas as pd
 import os
 import uuid
 
-app = Flask(__name__)
+app = Flask(__name__)  
 
 def extract_tags_from_url(url):
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
+            browser = p.chromium.launch(headless=True, args=["--no-sandbox"])  
             context = browser.new_context(ignore_https_errors=True)
             page = context.new_page()
             page.goto(url, timeout=60000)
@@ -46,6 +46,6 @@ def index():
 
     return render_template("index.html")
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+if __name__ != "__main__":  
+    import logging
+    logging.basicConfig(level=logging.INFO)
