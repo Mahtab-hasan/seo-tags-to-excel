@@ -20,7 +20,7 @@ def extract_tags_from_url(url):
             )
             context = browser.new_context(ignore_https_errors=True)
             page = context.new_page()
-            page.goto(url, timeout=60000)
+            page.goto(url, timeout=120000)
             content = page.content()
             browser.close()
 
