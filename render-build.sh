@@ -1,3 +1,5 @@
+# Marked as executable
+
 #!/usr/bin/env bash
 
 # Install Python dependencies
