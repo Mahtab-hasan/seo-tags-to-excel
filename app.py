@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, after_this_request
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 import pandas as pd
 import os
 import uuid
+import logging
 
 app = Flask(__name__)  
 
@@ -42,10 +43,18 @@ def index():
         filename = f"seo_tags_{uuid.uuid4().hex}.xlsx"
         filepath = os.path.join("temp", filename)
         df.to_excel(filepath, index=False)
+
+        @after_this_request
+        def remove_file(response):
+            try:
+                os.remove(filepath)
+            except Exception as e:
+                app.logger.error(f"Error deleting file {filepath}: {e}")
+            return response
+
         return send_file(filepath, as_attachment=True)
 
     return render_template("index.html")
 
 if __name__ != "__main__":  
-    import logging
     logging.basicConfig(level=logging.INFO)

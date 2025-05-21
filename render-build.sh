@@ -12,8 +12,8 @@ apt-get update && apt-get install -y \
   libmanette-0.2-0 \
   libgles2
 
-# Install Python dependencies
+# Install dependencies (if not using Poetry)
 pip install -r requirements.txt
 
 # Install Playwright browsers
-playwright install --with-deps
+python -m playwright install --with-deps
