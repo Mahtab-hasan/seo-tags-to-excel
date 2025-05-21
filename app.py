@@ -38,14 +38,14 @@ def index():
         url = request.form.get("url")
         data = extract_tags_from_url(url)
         df = pd.DataFrame(data)
+        os.makedirs("temp", exist_ok=True)
         filename = f"seo_tags_{uuid.uuid4().hex}.xlsx"
         filepath = os.path.join("temp", filename)
-        os.makedirs("temp", exist_ok=True)
         df.to_excel(filepath, index=False)
         return send_file(filepath, as_attachment=True)
 
     return render_template("index.html")
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # 🛠 Use dynamic port on Render
-    app.run(host="0.0.0.0", port=port)         # 🛠 Required for external access
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
