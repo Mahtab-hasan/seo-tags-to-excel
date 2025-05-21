@@ -1,5 +1,6 @@
 import os
-os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "./browsers"
+os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "./browsers"  # ✅ Correct placement
+
 from flask import Flask, render_template, request, send_file, after_this_request
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
@@ -12,9 +13,11 @@ app = Flask(__name__)
 def extract_tags_from_url(url):
     try:
         with sync_playwright() as p:
+            # ✅ Added chromium path explicitly
             browser = p.chromium.launch(
                 headless=True,
-                args=["--no-sandbox"]
+                args=["--no-sandbox"],
+                executable_path=os.path.join(os.environ.get("PLAYWRIGHT_BROWSERS_PATH", ""), "chromium", "chrome-linux", "chrome")
             )
             context = browser.new_context(ignore_https_errors=True)
             page = context.new_page()
@@ -35,25 +38,34 @@ def extract_tags_from_url(url):
                         data.append({'Tag': f'{tag_name} > span', 'Text': span_text})
         return data
     except Exception as e:
+        app.logger.error(f"Error extracting tags: {str(e)}")
         return [{'Tag': 'error', 'Text': str(e)}]
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         url = request.form.get("url")
+        if not url:
+            return "URL is required", 400
+            
         data = extract_tags_from_url(url)
         df = pd.DataFrame(data)
-        os.makedirs("temp", exist_ok=True)
-        filename = f"seo_tags_{uuid.uuid4().hex}.xlsx"
-        filepath = os.path.join("temp", filename)
-        df.to_excel(filepath, index=False)
+        
+        try:
+            os.makedirs("temp", exist_ok=True)
+            filename = f"seo_tags_{uuid.uuid4().hex}.xlsx"
+            filepath = os.path.join("temp", filename)
+            df.to_excel(filepath, index=False)
+        except Exception as e:
+            app.logger.error(f"File error: {str(e)}")
+            return "Error generating file", 500
 
         @after_this_request
         def remove_file(response):
             try:
                 os.remove(filepath)
             except Exception as e:
-                app.logger.error(f"Error deleting file {filepath}: {e}")
+                app.logger.error(f"Cleanup error: {str(e)}")
             return response
 
         return send_file(filepath, as_attachment=True)
