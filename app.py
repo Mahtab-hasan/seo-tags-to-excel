@@ -45,5 +45,7 @@ def index():
         return send_file(filepath, as_attachment=True)
 
     return render_template("index.html")
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # 🛠 Use dynamic port on Render
+    app.run(host="0.0.0.0", port=port)         # 🛠 Required for external access
