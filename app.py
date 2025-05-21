@@ -15,9 +15,14 @@ def extract_tags_from_url(url):
         with sync_playwright() as p:
             # ✅ Added chromium path explicitly
             browser = p.chromium.launch(
-                headless=True,
-                args=["--no-sandbox"],
-                executable_path=os.path.join(os.environ.get("PLAYWRIGHT_BROWSERS_PATH", ""), "chromium", "chrome-linux", "chrome")
+            headless=True,
+            args=["--no-sandbox", "--disable-dev-shm-usage"],
+            executable_path=os.path.join(
+                os.environ["PLAYWRIGHT_BROWSERS_PATH"],
+                "chromium",
+                "chrome-linux",
+                "chrome"
+            )
             )
             context = browser.new_context(ignore_https_errors=True)
             page = context.new_page()
