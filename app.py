@@ -10,7 +10,7 @@ app = Flask(__name__)
 def extract_tags_from_url(url):
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
+            browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
             context = browser.new_context(ignore_https_errors=True)
             page = context.new_page()
             page.goto(url, timeout=60000)
