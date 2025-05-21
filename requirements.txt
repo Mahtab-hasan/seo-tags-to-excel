@@ -1,0 +1,5 @@
+Flask
+playwright
+beautifulsoup4
+pandas
+openpyxl
